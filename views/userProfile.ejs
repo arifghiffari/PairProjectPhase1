@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-bottom: 1px solid #ccc;
+        }
+        header a {
+            text-decoration: none;
+            color: #333;
+        }
+        .profile-container {
+            margin: 20px;
+        }
+        .profile-container h1 {
+            text-align: center;
+        }
+        .profile-details {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+        .profile-details li {
+            margin-bottom: 10px;
+        }
+        .edit-profile-form {
+            margin: 20px auto;
+            width: 50%;
+        }
+        .edit-profile-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .edit-profile-form input[type="text"],
+        .edit-profile-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .edit-profile-form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .edit-profile-form .saved-message {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <label><b>Negozio</b></label>
+        <div>
+            <a href="/homepage">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        <ul class="profile-details">
+            <li>Email: <%= user.email %></li>
+        </ul>
+            <form class="edit-profile-form" action="/profile" method="post">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" value="<%= userProfile.firstName %>">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" value="<%= userProfile.lastName %>">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option disabled  <%= userProfile.gender != 'Male' && userProfile.gender != 'Female' ? 'selected' : '' %> >--Select--</option>
+                    <option value="Male" <%= userProfile.gender == 'Male' ? 'selected' : '' %>>Male</option>
+                    <option value="Female" <%= userProfile.gender == 'Female' ? 'selected' : '' %>>Female</option>
+                </select>
+                <button type="submit">Save</button>
+            </form>
+    </div>
+</body>
+</html>

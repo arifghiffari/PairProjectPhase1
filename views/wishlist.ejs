@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-bottom: 1px solid #ccc;
+        }
+        header a {
+            text-decoration: none;
+            color: #333;
+        }
+        .wishlist-container {
+            margin: 20px;
+        }
+        .wishlist-container h1 {
+            text-align: center;
+        }
+        .wishlist-items {
+            list-style: none;
+            padding: 0;
+        }
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .wishlist-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .wishlist-item .info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <label><b>Negozio</b></label>
+        <div>
+            <a href="/homepage">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+
+    <div class="wishlist-container">
+        <h1>Your Wishlist</h1>
+        <div class="alert" style="background-color: #fff3cd; padding: 10px;">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            Total items in wishlist: <%= wishlistSummary.totalItems %>. Total price of items: <%= convertPrice(wishlistSummary.totalPrice) %>
+        </div>
+        <ul class="wishlist-items">
+            <% wishlistItems.forEach(item => { %>
+                <% if (item.Product) { %>
+                    <li class="wishlist-item">
+                        <img src="<%= item.Product.imageUrl %>" alt="<%= item.Product.name %>">
+                        <div class="info">
+                            <span>Product Name: <%= item.Product.name %></span>
+                            <span>Price: <%= convertPrice(item.Product.price) %></span>
+                            <span>Description: <%= item.Product.description %></span>
+                            <% if (item.Product.Category) { %>
+                                <span>Category: <%= item.Product.Category.name %></span>
+                            <% } %>
+                            <span>User Email: <%= item.User.email %></span>
+                        </div>
+
+                        <form action="/wishlist/delete/<%= item.id %>" method="post">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </li>
+                <% } %>
+            <% }) %>
+        </ul>
+    </div>
+
+</body>
+</html>

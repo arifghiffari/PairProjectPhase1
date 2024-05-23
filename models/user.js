@@ -19,13 +19,57 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    email: DataTypes.STRING,
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
-    isAdmin: DataTypes.BOOLEAN
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Email cannot be null.'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Email cannot be empty.'
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Password cannot be null.'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Password cannot be empty.'
+        }
+      }
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'IsAdmin cannot be null.'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'IsAdmin cannot be empty.'
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'User',
+    hooks: {
+      beforeCreate: (user) => {
+          user.isAdmin = false;
+      }
+  }
   });
   return User;
 };

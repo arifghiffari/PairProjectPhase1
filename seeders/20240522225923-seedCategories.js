@@ -5,17 +5,14 @@ const bcrypt = require('bcrypt');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    const admins = JSON.parse(await readFile('./data/admin.json', 'utf-8')).map(async (el) => {
-      el.password = await bcrypt.hash(el.password, 10)
+    const categories = JSON.parse(await readFile('./data/categories.json', 'utf-8')).map((el) => {
       el.createdAt = new Date()
       el.updatedAt = new Date()
 
       return el
     })
 
-    const resolvedAdmins = await Promise.all(admins)
-
-    await queryInterface.bulkInsert('Users', resolvedAdmins, {})
+    await queryInterface.bulkInsert('Categories', categories, {})
     /**
      * Add seed commands here.
      *
@@ -28,7 +25,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Users', null, {
+    await queryInterface.bulkDelete('Categories', null, {
       truncate: true,
       restartIdentity: true
     })
