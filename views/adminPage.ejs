@@ -5,29 +5,19 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            background-color: #f4f4f4;
+            padding: 10px 20px;
+            background-color: #ad99d4;
             border-bottom: 1px solid #ccc;
         }
         header a {
             text-decoration: none;
             color: #333;
-        }
-        .search-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .search-container input {
-            width: 50%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
         .product-list {
             margin: 20px 0;
@@ -67,7 +57,7 @@
         .add-product-form input,
         .add-product-form textarea {
             display: block;
-            width: 100%;
+            width: 480px;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -97,65 +87,203 @@
             color: #333;
             text-decoration: none;
         }
+
+        
+
+        .glacies-outline-button {
+            width: 100%;
+            border-radius: 10000px;
+            padding: 5px 10px;
+            border:2px solid #2705a0;
+            background: white;
+            color: #2705a0;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: all 0.2s ease;
+        } 
+
+        .glacies-outline-button:not(:disabled):hover {
+            color: white;
+            background: #2705a0;
+        }
+
+        .glacies-outline-button:disabled {
+            color: white;
+            background: #2705a0;
+            opacity: 60%
+        }
+
+        .glacies-outline-button-red {
+            width: 100%;
+            border-radius: 10000px;
+            padding: 5px 10px;
+            border:2px solid #DC143C;
+            background: white;
+            color: #DC143C;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: all 0.2s ease;
+        } 
+
+        .glacies-outline-button-red:not(:disabled):hover {
+            color: white;
+            background: #DC143C;
+        }
+
+        .glacies-outline-button-red:disabled {
+            color: white;
+            background: #DC143C;
+            opacity: 60%
+        }
+
+        .clickAble:hover {
+            cursor: pointer;
+            opacity: 80%;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .links>a {
+            padding: 5px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .links>a:hover {
+            opacity: 50%;
+        }
+
+        .error-message {
+            color: #ff0000;
+            background-color: #ffe5e5;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
     </style>
 </head>
 <body>
     <header>
-        <label><b>Negozio</b></label>
-        <div class="search-container">
-            <form action="<%= actionUrl %>" method="get">
-                <input type="text" name="search" placeholder="Search..." style="width: 70%; margin-right: 1%">
-                <button type="submit" style="background-color: lightskyblue; border-color: lightskyblue; border-radius: 4px;">Search</button>
-            </form>
-        </div>
-        <div>
-            <a href="/logout">Logout</a>
+        <a href="/" class="clickAble">
+            <div style="display:flex; align-items: center; justify-content: center">
+                <img src='https://i.imgur.com/v3foH3P.png' style="height: 40px" >
+                <img src='https://i.imgur.com/ijBBA54.png' style="height: 30px; margin-left: 10px;" >
+            </div>
+        </a>
+        <div class="links">
+            <div style="position: relative; max-width: 400px; margin: 0 20px;">
+                <form action="<%= actionUrl %>" method="get">
+                    <input
+                        type="text"
+                        id="Search"
+                        name="search"
+                        placeholder="Search for..."
+                        style="border-radius: 0.375rem; border: 1px solid #e5e7eb; padding: 0.3rem 2.5rem 0.3rem 0.75rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); font-size: 0.875rem;"
+                    />
+                
+                    <span style="position: absolute; top: 0; bottom: 0; right: 0; display: grid; width: 2.5rem; place-content: center;">
+                    <button type="submit" style="background: transparent; border: 0; color: #4b5563; transition: color 0.2s; cursor: pointer;">
+                
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        style="height: 1rem; width: 1rem;"
+                        >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                        />
+                        </svg>
+                    </button>
+                    </span>
+                </form>
+            </div>
+            <a title="Logout" href="/logout"><svg xmlns="http://www.w3.org/2000/svg" style="height:20px" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg></a>
         </div>
     </header>
 
-    <ul class="product-list">
+    <h1 style="margin: 20px 20px 0px; font-size: 1.4em;">Displayed Items</h1>
+
+    <div style="display: flex; flex-wrap: wrap; margin: 0; padding: 20px 10px;">
         <% products.forEach(product => { %>
-            <li>
-                <img src="<%= product.imageUrl %>" alt="<%= product.name %>">
-                <div class="info">
-                    <span>Name: <%= product.name %></span>
-                    <span>Description: <%= product.description %></span>
-                    <span>Price: <%= convertPrice(product.price) %></span>
-                    <span>Stock: <%= product.stock %></span>
-                    <span>Category: <%= product.Category.name %></span>
+            <div style="width: calc(20% - 20px); padding: 10px;">
+                <div style="border: 3px solid #2705a0; border-radius: 8px; overflow: hidden;">
+                    <div style="aspect-ratio: 1 / 1; overflow: hidden; position: relative;">
+                        <img src="<%= product.imageUrl %>" alt="<%= product.name %>" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.8em; font-weight: bold; background-color: #2705a089; color: white; border-radius: 1000px; padding: 2px 5px;">
+                            <%= product.Category.name %>
+                        </div>
+                    </div>
+                    <p style="padding: 5px 10px 10px; margin: 0; font-weight: bold; font-size: 1.2em;"><%= product.name %></p>
+                    <p style="padding: 0 10px; text-align: justify; font-size: 0.8em; margin: 0; color: #b7b7b7;"><%= product.description %></p>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+                        <p style="margin: 0; font-weight: bold;"><%= convertPrice(product.price) %></p>
+                        <p style="margin: 0; color: #b7b7b7; font-size: 0.9em;">Qty: <span style="color: black; font-weight: bold;"><%= product.stock %></span></p>
+                    </div>
+
+                    <div class="actions" style="padding: 10px; display: flex;">
+                        <a href="/admin/edit-product/<%= product.id %>" style="width: 100%"><button class="glacies-outline-button" >Edit</button></a>
+                        <div style="width: 100%; margin-left:10px">
+                            <form action="/admin/delete-product/<%= product.id %>" method="post">
+                                <input type="hidden" name="productId" value="<%= product.id %>">
+                                <button type="submit" class="glacies-outline-button-red" >Delete</button>
+                            </form>   
+                        </div>          
+                    </div>
                 </div>
-                <div class="actions">
-                    <a href="/admin/edit-product/<%= product.id %>">Edit</a>
-                    <form action="/admin/delete-product/<%= product.id %>" method="post">
-                        <button type="submit">Delete</button>
-                    </form>
-                </div>
-            </li>
+            </div>
         <% }) %>
-    </ul>
-    <hr>
-    <div class="add-product-form">
-        <h2>Add Product</h2>
-        <form action="/admin/add-product" method="post">
-            <input type="text" name="name" placeholder="Name">
-            <input type="text" name="imageUrl" placeholder="Image URL">
-            <input type="number" name="price" placeholder="Price">
-            <textarea name="description" placeholder="Description"></textarea>
-            <input type="number" name="stock" placeholder="Stock">
-            <label>Categories</label>
-            <select name="CategoryId">
-                <option selected disabled>--Select--</option>
-                <% categories.forEach(category => { %>
-                    <option value="<%= category.id %>"><%= category.name %></option>
-                <% }); %>
-            </select>
-            <button type="submit">Add Product</button>
-        </form>
     </div>
 
-    <!-- <div class="sidebar">
-        <a href="#">Email</a>
-        <a href="#">Settings</a>
-    </div> -->
+    <hr>
+    <div style="display: flex; justify-content: center;">
+        <div class="add-product-form" style="max-width: 500px;">
+            <h2>Add Product</h2>
+            
+            <% if(errors) { %>
+                <div class="error-message">
+                    <% errors.forEach(error => { %>
+                        <p><%= error %></p>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <form action="/admin/add-product" method="post">
+                <label style="font-size: 0.7em; font-weight: bold;">Name</label>
+                <input type="text" name="name" placeholder="Name">
+                <label style="font-size: 0.7em; font-weight: bold;">ImageUrl</label>
+                <input type="text" name="imageUrl" placeholder="ImageUrl">
+                <label style="font-size: 0.7em; font-weight: bold;">Price</label>
+                <input type="number" name="price" placeholder="Price">
+                <label style="font-size: 0.7em; font-weight: bold;">Description</label>
+                <textarea name="description" placeholder="Description"></textarea>
+                <label style="font-size: 0.7em; font-weight: bold;">Stock</label>
+                <input type="number" name="stock" placeholder="Stock">
+                <label style="font-size: 0.7em; font-weight: bold;">Categories</label>
+                <select name="CategoryId" style="width: 500px; margin: 5px 0 20px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option selected disabled>--Select--</option>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.id %>"><%= category.name %></option>
+                    <% }); %>
+                </select>
+                <button type="submit">Add Product</button>
+            </form>
+        </div>    
+    </div>
 </body>
 </html>

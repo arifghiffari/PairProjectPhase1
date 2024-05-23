@@ -1,7 +1,7 @@
 const { Category, Product, Profile, User, Wishlist } = require('../models')
 const bcrypt = require('bcrypt')
 const convertPrice = require('../helpers/convertPrice')
-const { Op } = require('sequelize')
+const axios = require('axios')
 
 class Controller {
     static async renderLandingPage(req, res) {
@@ -14,13 +14,30 @@ class Controller {
     }
 
     static async renderLoginPage(req, res) {
-        res.render('login')
+        let { errors } = req.query
+
+        if (errors) {
+            errors = errors.split(',')
+        }
+
+        res.render('login', { errors })
     }
 
     static async handleLogin(req, res) {
         try {
             const { email, password } = req.body
             const user = await User.findOne({ where: { email } })
+
+            if ((email == null || email == '') && (password == null || password == '')) {
+                res.redirect('/login?errors=Email and password cannot be empty.')
+                return
+            } else if (email == null || email == ''){
+                res.redirect('/login?errors=Email cannot be empty.')
+                return
+            } else if (password == null || password == ''){
+                res.redirect('/login?errors=Password cannot be empty.')
+                return
+            }
 
             if (user && bcrypt.compareSync(password, user.password)) {
                 req.session.user = { id: user.id, email: user.email, isAdmin: user.isAdmin }
@@ -31,11 +48,16 @@ class Controller {
                     return res.redirect('/homepage')
                 }
             } else {
-                res.redirect('/login')
+                res.redirect('/login?errors=Email or password is invalid.')
             }
         } catch (error) {
-            console.log(error)
-            res.send(error)
+            console.log(error);
+            if (error.name === 'SequelizeValidationError') {
+                let message = error.errors.map(el => el.message)
+                res.redirect(`/login?errors=${message}`)
+            } else {
+                res.send(error)
+            }
         }
     }
 
@@ -45,11 +67,28 @@ class Controller {
 
     static async handleSignUp(req, res) {
         try {
-            const { email, password } = req.body
+            let email = req.body.email
+            let password = req.body.password
+            let captchaResponse = req.body['h-captcha-response']
             const hashedPassword = bcrypt.hashSync(password, 10)
-            await User.create({ email, password: hashedPassword, isAdmin: true })
+            let payload = new URLSearchParams();
+            payload.append('response', captchaResponse);
+            payload.append('secret', 'ES_5a8698d569d24805964fbf4581e75171');
+            
+            axios.post('https://api.hcaptcha.com/siteverify', payload.toString(), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(async (resp) => {
+                console.log(resp.data)
+                if (resp.data.success) {
+                    await User.create({ email, password: hashedPassword, isAdmin: true })
 
-            res.redirect('/login')
+                    res.redirect('/login')
+                }
+            })
+
         } catch (error) {
             console.log(error)
             res.send(error)
@@ -68,11 +107,18 @@ class Controller {
 
     static async renderAdminHomePage(req, res) {
         try {
+            let { errors } = req.query
+
+            if (errors) {
+                errors = errors.split(',')
+            }
+
             const { search } = req.query
             const products = await Product.getProductsByName(search)
             const categories = await Category.findAll()
 
-            res.render('adminPage', { products, categories, convertPrice, actionUrl: '/admin' })
+            res.render('adminPage', { products, categories, errors, convertPrice, actionUrl: '/admin' })
+
         } catch (error) {
             console.log(error)
             res.send(error)
@@ -87,6 +133,7 @@ class Controller {
             const userWishlist = await Wishlist.findAll({ where: { UserId: req.session.user.id } })
 
             res.render('userPage', { products, users, userWishlist, convertPrice, actionUrl: '/homepage' })
+
         } catch (error) {
             console.log(error)
             res.send(error)
@@ -101,20 +148,30 @@ class Controller {
             res.redirect('/admin')
 
         } catch (error) {
-            console.log(error)
-            res.send(error)
+            if (error.name === 'SequelizeValidationError') {
+                let message = error.errors.map(el => el.message)
+                res.redirect(`/admin/add-product?errors=${message}`)
+            } else {
+                res.send(error)
+            }
         }
     }
 
     static async renderEditProductPage(req, res) {
         try {
+            let { errors } = req.query
+
+            if (errors) {
+                errors = errors.split(',')
+            }
+
             const { id } = req.params
             const product = await Product.findByPk(id, {
                 include: Category
             })
             const categories = await Category.findAll()
 
-            res.render('editProduct', { product, categories })
+            res.render('editProduct', { product, errors, categories })
 
         } catch (error) {
             console.log(error)
@@ -133,9 +190,15 @@ class Controller {
             )
 
             res.redirect('/admin')
+
         } catch (error) {
-            console.log(error)
-            res.send(error)
+            const { id } = req.params
+            if (error.name === 'SequelizeValidationError') {
+                let message = error.errors.map(el => el.message)
+                res.redirect(`/admin/edit-product/${id}?errors=${message}`)
+            } else {
+                res.send(error)
+            }
         }
     }
 
@@ -144,6 +207,7 @@ class Controller {
             const { id } = req.params
             await Product.destroy({ where: { id } })
             res.redirect('/admin')
+
         } catch (error) {
             console.log(error)
             res.send(error)
@@ -152,9 +216,13 @@ class Controller {
 
     static async renderAddToWishlist(req, res) {
         try {
+            const { search } = req.query
+            const products = await Product.getProductsByName(search)
+            const userId = req.session.user.id
             const wishlistItems = await Wishlist.findAll({
-                where: { UserId: req.session.user.id },
+                where: { UserId: userId },
                 include: [
+
                     { model: User },
                     {
                         model: Product,
@@ -162,9 +230,10 @@ class Controller {
                     }
                 ]
             })
-            const wishlistSummary = await Wishlist.summarize()
-
-            res.render('wishlist', { wishlistItems, wishlistSummary, convertPrice })
+            
+            const wishlistSummary = await Wishlist.summarize(userId)
+    
+            res.render('wishlist', { products, wishlistItems, wishlistSummary, convertPrice, actionUrl: '/wishlist' })
 
         } catch (error) {
             console.log(error)
@@ -244,6 +313,5 @@ class Controller {
         }
     }
 }
-
 
 module.exports = Controller

@@ -5,8 +5,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Wishlist extends Model {
 
-    static async summarize() {
+    static async summarize(userId) {
       const summarizeData = await this.findAll({
+        where: { UserId: userId},
         include: [{
           model: sequelize.models.Product,
           attributes: []

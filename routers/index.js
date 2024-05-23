@@ -36,9 +36,9 @@ router.post('/admin/edit-product/:id', isAdmin, Controller.handleEditProduct)
 // User routes
 router.get('/homepage', isAuthenticated, Controller.renderUserHomePage)
 router.get('/profile', isAuthenticated, Controller.renderUserProfile)
-router.post('/profile', Controller.handleSaveProfile)
+router.post('/profile', isAuthenticated, Controller.handleSaveProfile)
 router.get('/wishlist', isAuthenticated, Controller.renderAddToWishlist)
 router.post('/wishlist',  isAuthenticated, Controller.handleAddToWishlist)
-router.post('/wishlist/delete/:itemId', Controller.deleteWishlistItem)
+router.post('/wishlist/delete/:itemId', isAuthenticated, Controller.deleteWishlistItem)
 
 module.exports = router

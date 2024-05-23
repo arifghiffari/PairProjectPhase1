@@ -3,16 +3,16 @@
 <head>
     <title>Edit Product</title>
     <style>
-        /* Basic styling for layout */
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            background-color: #f4f4f4;
+            padding: 10px 20px;
+            background-color: #ad99d4;
             border-bottom: 1px solid #ccc;
         }
         header a {
@@ -68,7 +68,7 @@
         .edit-product-form input,
         .edit-product-form textarea {
             display: block;
-            width: 100%;
+            width: 480px;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -82,55 +82,109 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .sidebar {
-            position: fixed;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 200px;
-            background-color: #f4f4f4;
-            padding: 20px;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+        .glacies-outline-button {
+            width: 100%;
+            border-radius: 10000px;
+            padding: 5px 10px;
+            border:2px solid #2705a0;
+            background: white;
+            color: #2705a0;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: all 0.2s ease;
+        } 
+
+        .glacies-outline-button:not(:disabled):hover {
+            color: white;
+            background: #2705a0;
         }
-        .sidebar a {
-            display: block;
+
+        .glacies-outline-button:disabled {
+            color: white;
+            background: #2705a0;
+            opacity: 60%
+        }
+
+        .clickAble:hover {
+            cursor: pointer;
+            opacity: 80%;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .links>a {
+            padding: 5px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .links>a:hover {
+            opacity: 50%;
+        }
+
+        .error-message {
+            color: #ff0000;
+            background-color: #ffe5e5;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            padding: 10px;
             margin-bottom: 10px;
-            color: #333;
-            text-decoration: none;
         }
+
     </style>
 </head>
 <body>
     <header>
-        <a href="/negozio">Negozio</a>
-        <div class="search-container">
-            <input type="text" placeholder="Search...">
-        </div>
-        <div>
-            <a href="/logout">Logout</a>
+        <a href="/admin" class="clickAble">
+            <div style="display:flex; align-items: center; justify-content: center">
+                <img src='https://i.imgur.com/v3foH3P.png' style="height: 40px" >
+                <img src='https://i.imgur.com/ijBBA54.png' style="height: 30px; margin-left: 10px;" >
+            </div>
+        </a>
+            <a title="Logout" href="/logout"><svg xmlns="http://www.w3.org/2000/svg" style="height:20px" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg></a>
         </div>
     </header>
 
-    <div class="edit-product-form">
-        <h2>Edit Product</h2>
-        <form action="/admin/edit-product/<%= product.id %>" method="post">
-            <input type="text" name="name"  value="<%= product.name %>">
-            <input type="text" name="imageUrl" value="<%= product.imageUrl %>">
-            <input type="number" name="price" value="<%= product.price %>">
-            <textarea name="description"><%= product.description %></textarea>
-            <input type="number" name="stock" value="<%= product.stock %>">
-            <select name="CategoryId">
-                <% categories.forEach(category => { %>
-                    <option value="<%= category.id %>" <%= category.id === product.Category.id ? 'selected' : '' %>><%= category.name %></option>
-                <% }) %>
-            </select>
-            <button type="submit">Save Changes</button>
-        </form>
-    </div>
+    <div style="display: flex; justify-content: center;">
+        <div class="edit-product-form" style="max-width: 500px;">
+            <h2>Edit Product</h2>
 
-    <!-- <div class="sidebar" style="margin: 20px;">
-        <a href="#">Email</a>
-        <a href="#">Settings</a>
-    </div> -->
-</body>
+            <% if(errors) { %>
+                <div class="error-message">
+                    <% errors.forEach(error => { %>
+                        <p><%= error %></p>
+                    <% }) %>
+                </div>
+            <% } %>
+
+            <form action="/admin/edit-product/<%= product.id %>" method="post">
+                <label style="font-size: 0.7em; font-weight: bold;">Name</label>
+                <input type="text" name="name" placeholder="Name" value="<%= product.name %>">
+                <label style="font-size: 0.7em; font-weight: bold;">ImageUrl</label>
+                <input type="text" name="imageUrl" placeholder="ImageUrl" value="<%= product.imageUrl %>">
+                <label style="font-size: 0.7em; font-weight: bold;">Price</label>
+                <input type="number" name="price" placeholder="Price" value="<%= product.price %>">
+                <label style="font-size: 0.7em; font-weight: bold;">Description</label>
+                <textarea name="description" placeholder="Description"><%= product.description %></textarea>
+                <label style="font-size: 0.7em; font-weight: bold;">Stock</label>
+                <input type="number" name="stock" placeholder="Stock"  value="<%= product.stock %>">
+                <label style="font-size: 0.7em; font-weight: bold;">Categories</label>
+                <select name="CategoryId" style="width: 500px; margin: 5px 0 20px; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option selected disabled>--Select--</option>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.id %>" <%= category.id === product.Category.id ? 'selected' : '' %>><%= category.name %></option>
+                    <% }) %>
+                </select>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>    
+    </div>
+    </body>
 </html>
