@@ -75,19 +75,17 @@ class Controller {
             payload.append('response', captchaResponse);
             payload.append('secret', 'ES_5a8698d569d24805964fbf4581e75171');
             
-            axios.post('https://api.hcaptcha.com/siteverify', payload.toString(), {
+            let response = await axios.post('https://api.hcaptcha.com/siteverify', payload.toString(), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             })
-            .then(async (resp) => {
-                console.log(resp.data)
-                if (resp.data.success) {
-                    await User.create({ email, password: hashedPassword, isAdmin: true })
+            
+            if (response.data.success) {
+                await User.create({ email, password: hashedPassword, isAdmin: true })
 
-                    res.redirect('/login')
-                }
-            })
+                res.redirect('/login')
+            }
 
         } catch (error) {
             console.log(error)
