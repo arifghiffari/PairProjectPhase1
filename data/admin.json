@@ -1,0 +1,7 @@
+[
+    {
+        "email": "admin@gmail.com",
+        "password": "admin",
+        "isAdmin": true
+    }
+]
