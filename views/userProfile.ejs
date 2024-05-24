@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ad99d4;
+            border-bottom: 1px solid #ccc;
+        }
+        header a {
+            text-decoration: none;
+            color: #333;
+        }
+        .profile-container {
+            margin: 20px;
+        }
+        .profile-container h1 {
+            text-align: center;
+        }
+        .profile-details {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+        .profile-details li {
+            margin-bottom: 10px;
+        }
+        .edit-profile-form {
+            margin: 20px auto;
+            width: 50%;
+        }
+        .edit-profile-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .edit-profile-form input[type="text"],
+        .edit-profile-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .edit-profile-form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .edit-profile-form .saved-message {
+            color: green;
+            font-weight: bold;
+        }
+
+        .glacies-outline-button {
+            width: 100%;
+            border-radius: 10000px;
+            padding: 5px 10px;
+            border:2px solid #2705a0;
+            background: white;
+            color: #2705a0;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: all 0.2s ease;
+        } 
+
+        .glacies-outline-button:not(:disabled):hover {
+            color: white;
+            background: #2705a0;
+        }
+
+        .glacies-outline-button:disabled {
+            color: white;
+            background: #2705a0;
+            opacity: 60%
+        }
+
+        .clickAble:hover {
+            cursor: pointer;
+            opacity: 80%;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .links>a {
+            padding: 5px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .links>a:hover {
+            opacity: 50%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/homepage" class="clickAble">
+            <div style="display:flex; align-items: center; justify-content: center">
+                <img src='https://i.imgur.com/v3foH3P.png' style="height: 40px" >
+                <img src='https://i.imgur.com/ijBBA54.png' style="height: 30px; margin-left: 10px;" >
+            </div>
+        </a>
+            <a title="Logout" href="/logout"><svg xmlns="http://www.w3.org/2000/svg" style="height:20px" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg></a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <h1>User Profile</h1>
+        <ul class="profile-details">
+            <li>Email: <%= user.email %></li>
+        </ul>
+            <form class="edit-profile-form" action="/profile" method="post">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" value="<%= userProfile.firstName %>">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" value="<%= userProfile.lastName %>">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option disabled  <%= userProfile.gender != 'Male' && userProfile.gender != 'Female' ? 'selected' : '' %> >--Select--</option>
+                    <option value="Male" <%= userProfile.gender == 'Male' ? 'selected' : '' %>>Male</option>
+                    <option value="Female" <%= userProfile.gender == 'Female' ? 'selected' : '' %>>Female</option>
+                </select>
+                <button type="submit">Save</button>
+            </form>
+    </div>
+</body>
+</html>
